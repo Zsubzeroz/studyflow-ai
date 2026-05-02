@@ -1,6 +1,9 @@
 import os
+from dotenv import load_dotenv
 from google import genai
 from pydantic import BaseModel
+
+load_dotenv()
 
 class AIService:
     def __init__(self):
@@ -45,7 +48,8 @@ class AIService:
                     "response_mime_type": "application/json" # Isso garante que o Gemini retorne apenas o JSON
                 }
             )
-            return response.text
+            texto_limpo = response.text.replace("```json", "").replace("```", "").strip()
+            return texto_limpo
         except Exception as e:
             print(f"Erro na chamada da IA: {e}")
             return None

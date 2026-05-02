@@ -3,7 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import shutil
 import os
+from dotenv import load_dotenv
 import random
+
+load_dotenv()
 import random
 from datetime import datetime, timedelta
 
@@ -53,13 +56,48 @@ async def upload_pdf(file: UploadFile = File(...), db: Session = Depends(get_db)
         processor = PDFProcessor(temp_path)
         text = processor.extract_text()
 
-        # 3. Gerar IA (Lógica que você já fez)
+        # 3. Gerar IA e Salvar no Banco
         ai_service = AIService()
-        # Aqui simplificamos o retorno da IA para este exemplo
-        # Em um sistema real, você chamaria a função que salva no banco
-        # raw_response = ai_service.generate_study_material(text)
+        raw_response = ai_service.generate_study_material(text)
         
-        return {"filename": file.filename, "status": "Processado com sucesso (mock de IA via API)"}
+        if not raw_response:
+            raise HTTPException(status_code=500, detail="Erro ao gerar material de estudo via IA.")
+            
+        import json
+        try:
+            study_data = json.loads(raw_response)
+            
+            # Salvar Flashcards
+            for card in study_data.get('flashcards', []):
+                novo_flashcard = Flashcard(
+                    pergunta=card['pergunta'],
+                    resposta=card['resposta']
+                )
+                db.add(novo_flashcard)
+                
+            # Salvar Questão ENEM
+            q = study_data.get('questao_enem', {})
+            if q:
+                alts = q.get('alternativas', {})
+                nova_questao = QuestaoEnem(
+                    enunciado=q.get('enunciado'),
+                    comando=q.get('comando'),
+                    alternativa_a=alts.get('a'),
+                    alternativa_b=alts.get('b'),
+                    alternativa_c=alts.get('c'),
+                    alternativa_d=alts.get('d'),
+                    alternativa_e=alts.get('e'),
+                    resposta_correta=q.get('resposta_correta'),
+                    explicacao=q.get('explicacao')
+                )
+                db.add(nova_questao)
+                
+            db.commit()
+            return {"filename": file.filename, "status": "Processado com sucesso", "cards_gerados": len(study_data.get('flashcards', []))}
+            
+        except json.JSONDecodeError:
+            db.rollback()
+            raise HTTPException(status_code=500, detail="Erro ao decodificar a resposta da IA.")
 
     finally:
         # Limpar o arquivo temporário
