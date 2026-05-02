@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getCardsParaRevisar, responderCard } from '../api/api';
-import { motion, AnimatePresence } from 'framer-motion';
+import Flashcard from '../components/Flashcard';
 
 const StudySession = () => {
   const [cards, setCards] = useState([]);
@@ -36,48 +36,30 @@ const StudySession = () => {
   const currentCard = cards[currentIndex];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[90vh] bg-slate-900 text-white p-4">
+    <div className="flex flex-col items-center justify-center min-h-[85vh] bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 p-4 transition-colors relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+
         {/* Barra de Progresso */}
-        <div className="w-full max-w-md bg-gray-700 h-2 rounded-full mb-8">
+        <div className="w-full max-w-md bg-slate-200 dark:bg-slate-700 h-3 rounded-full mb-12 shadow-inner relative z-10">
             <div 
-                className="bg-blue-500 h-2 rounded-full transition-all duration-500" 
+                className="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-700 shadow-md" 
                 style={{ width: `${((currentIndex) / cards.length) * 100}%` }}
             ></div>
         </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div 
-          key={currentIndex}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
-          className="bg-white text-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md min-h-[300px] flex flex-col items-center justify-center text-center"
-        >
-          <p className="text-sm text-gray-400 mb-4 uppercase tracking-widest font-semibold">Pergunta</p>
-          <h2 className="text-2xl font-medium">{currentCard.pergunta}</h2>
+      <div className="relative z-10 w-full flex flex-col items-center">
+        <Flashcard card={currentCard} flipped={showAnswer} setFlipped={setShowAnswer} />
+      </div>
 
-          {showAnswer && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 pt-8 border-t w-full">
-              <p className="text-sm text-gray-400 mb-2 uppercase tracking-widest font-semibold">Resposta</p>
-              <p className="text-xl text-blue-600 font-bold">{currentCard.resposta}</p>
-            </motion.div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      <div className="mt-12 flex flex-col gap-4 w-full max-w-md">
+      <div className="mt-12 flex flex-col gap-4 w-full max-w-md relative z-10 min-h-[100px]">
         {!showAnswer ? (
-          <button 
-            onClick={() => setShowAnswer(true)}
-            className="bg-blue-600 hover:bg-blue-700 p-4 rounded-xl font-bold text-lg transition-all"
-          >
-            Ver Resposta
-          </button>
+            <p className="text-center text-slate-500 font-medium animate-pulse">Lembre-se da resposta antes de virar o card!</p>
         ) : (
-          <div className="grid grid-cols-3 gap-2">
-            <button onClick={() => handleResponse(1)} className="bg-red-500 hover:bg-red-600 p-3 rounded-lg font-bold transition-colors">Difícil</button>
-            <button onClick={() => handleResponse(3)} className="bg-yellow-500 hover:bg-yellow-600 p-3 rounded-lg font-bold transition-colors">Médio</button>
-            <button onClick={() => handleResponse(5)} className="bg-green-500 hover:bg-green-600 p-3 rounded-lg font-bold transition-colors">Fácil</button>
+          <div className="grid grid-cols-3 gap-4 animate-in slide-in-from-bottom-4 fade-in duration-500">
+            <button onClick={() => handleResponse(1)} className="bg-rose-500 hover:bg-rose-600 text-white p-4 rounded-xl font-bold transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-rose-500/30">Difícil</button>
+            <button onClick={() => handleResponse(3)} className="bg-amber-500 hover:bg-amber-600 text-white p-4 rounded-xl font-bold transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-amber-500/30">Médio</button>
+            <button onClick={() => handleResponse(5)} className="bg-emerald-500 hover:bg-emerald-600 text-white p-4 rounded-xl font-bold transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/30">Fácil</button>
           </div>
         )}
       </div>
