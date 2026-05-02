@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { uploadPDF, getCardsParaRevisar } from '../api/api';
 import { Upload, BookOpen, BrainCircuit } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
   const [cardsCount, setCardsCount] = useState(0);
@@ -19,17 +20,21 @@ const Dashboard = () => {
     if (!file) return;
 
     setIsUploading(true);
-    try {
-      await uploadPDF(file);
-      alert("✅ PDF processado! Novos cards gerados.");
-      // Atualiza a contagem
-      const updated = await getCardsParaRevisar();
-      setCardsCount(updated.data.length);
-    } catch (error) {
-      alert("❌ Erro ao processar PDF.");
-    } finally {
+    
+    toast.promise(
+      uploadPDF(file).then(async () => {
+          const updated = await getCardsParaRevisar();
+          setCardsCount(updated.data.length);
+      }),
+      {
+        loading: 'O Gemini está processando seu PDF...',
+        success: 'Material gerado com sucesso! 🚀',
+        error: '❌ Erro ao processar o PDF.',
+      }
+    ).finally(() => {
       setIsUploading(false);
-    }
+      event.target.value = null; // reset input
+    });
   };
 
   return (

@@ -4,6 +4,7 @@ from typing import List, Optional
 class FlashcardResponse(BaseModel):
     pergunta: str
     resposta: str
+    video_url: Optional[str] = None
 
 class StudyMaterialResponse(BaseModel):
     flashcards: List[FlashcardResponse]
@@ -17,6 +18,7 @@ class FlashcardRevisaoResponse(BaseModel):
     id: int
     pergunta: str
     resposta: str
+    video_url: Optional[str] = None
 
 class StatsResponse(BaseModel):
     total_cards: int

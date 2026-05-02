@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getCardsParaRevisar, responderCard } from '../api/api';
 import Flashcard from '../components/Flashcard';
+import toast from 'react-hot-toast';
 
 const StudySession = () => {
   const [cards, setCards] = useState([]);
@@ -13,11 +14,20 @@ const StudySession = () => {
 
   const handleResponse = async (nota) => {
     const card = cards[currentIndex];
-    await responderCard(card.id, nota);
     
-    // Passar para o próximo card com animação
-    setShowAnswer(false);
-    setCurrentIndex(prev => prev + 1);
+    try {
+      await responderCard(card.id, nota);
+      
+      let msg = nota === 5 ? 'Muito bem! 🎉' : nota === 3 ? 'Bom trabalho! 👍' : 'Vamos revisar mais vezes! 💪';
+      toast.success(msg, { icon: nota === 5 ? '🧠' : '📚' });
+      
+      // Passar para o próximo card
+      setShowAnswer(false);
+      setCurrentIndex(prev => prev + 1);
+    } catch (e) {
+      console.error(e);
+      toast.error('Erro ao salvar sua resposta.');
+    }
   };
 
   if (cards.length === 0) {
@@ -41,7 +51,7 @@ const StudySession = () => {
         <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
 
         {/* Barra de Progresso */}
-        <div className="w-full max-w-md bg-slate-200 dark:bg-slate-700 h-3 rounded-full mb-12 shadow-inner relative z-10">
+        <div className="w-full max-w-3xl bg-slate-200 dark:bg-slate-700 h-3 rounded-full mb-12 shadow-inner relative z-10">
             <div 
                 className="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-700 shadow-md" 
                 style={{ width: `${((currentIndex) / cards.length) * 100}%` }}
@@ -52,14 +62,14 @@ const StudySession = () => {
         <Flashcard card={currentCard} flipped={showAnswer} setFlipped={setShowAnswer} />
       </div>
 
-      <div className="mt-12 flex flex-col gap-4 w-full max-w-md relative z-10 min-h-[100px]">
+      <div className="mt-12 flex flex-col gap-4 w-full max-w-3xl relative z-10 min-h-[100px]">
         {!showAnswer ? (
-            <p className="text-center text-slate-500 font-medium animate-pulse">Lembre-se da resposta antes de virar o card!</p>
+            <p className="text-center text-slate-500 font-medium animate-pulse text-lg">Leia atentamente e lembre-se da resposta antes de virar o card!</p>
         ) : (
-          <div className="grid grid-cols-3 gap-4 animate-in slide-in-from-bottom-4 fade-in duration-500">
-            <button onClick={() => handleResponse(1)} className="bg-rose-500 hover:bg-rose-600 text-white p-4 rounded-xl font-bold transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-rose-500/30">Difícil</button>
-            <button onClick={() => handleResponse(3)} className="bg-amber-500 hover:bg-amber-600 text-white p-4 rounded-xl font-bold transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-amber-500/30">Médio</button>
-            <button onClick={() => handleResponse(5)} className="bg-emerald-500 hover:bg-emerald-600 text-white p-4 rounded-xl font-bold transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/30">Fácil</button>
+          <div className="grid grid-cols-3 gap-6 animate-in slide-in-from-bottom-4 fade-in duration-500">
+            <button onClick={() => handleResponse(1)} className="bg-rose-500 hover:bg-rose-600 text-white p-5 rounded-2xl font-bold text-xl transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-rose-500/30">Difícil</button>
+            <button onClick={() => handleResponse(3)} className="bg-amber-500 hover:bg-amber-600 text-white p-5 rounded-2xl font-bold text-xl transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/30">Médio</button>
+            <button onClick={() => handleResponse(5)} className="bg-emerald-500 hover:bg-emerald-600 text-white p-5 rounded-2xl font-bold text-xl transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/30">Fácil</button>
           </div>
         )}
       </div>

@@ -34,7 +34,15 @@ const Simulado = () => {
 
   const formatarTempo = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
-  if (!questao) return <div className="p-8 text-center mt-20 font-bold text-gray-600 dark:text-gray-300">Carregando questão...</div>;
+  if (!questao) return <div className="p-8 text-center mt-20 font-bold text-slate-600 dark:text-slate-300">Carregando questão...</div>;
+  if (questao.error) return (
+      <div className="flex flex-col items-center justify-center min-h-[80vh] text-center p-8">
+        <BrainCircuit size={64} className="text-indigo-300 mb-6" />
+        <h2 className="text-3xl font-bold text-slate-700 dark:text-slate-200 mb-4">Nenhuma questão encontrada! 🏜️</h2>
+        <p className="text-lg text-slate-500 mb-8 max-w-md">O seu banco de dados está limpo. Faça o upload de um material no Dashboard para que a IA gere as questões do ENEM.</p>
+        <a href="/" className="bg-indigo-600 text-white px-8 py-4 rounded-full font-bold shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-1 transition-all">Voltar para o Dashboard</a>
+      </div>
+  );
 
   return (
     <div className="min-h-[90vh] bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 p-4 md:p-8 transition-colors relative overflow-hidden">

@@ -18,8 +18,8 @@ class AIService:
 
         {{
             "flashcards": [
-                {{"pergunta": "...", "resposta": "..."}},
-                {{"pergunta": "...", "resposta": "..."}}
+                {{"pergunta": "...", "resposta": "...", "video_url": "https://www.youtube.com/embed?listType=search&list=TEMA+AQUI+RESUMO"}},
+                {{"pergunta": "...", "resposta": "...", "video_url": "https://www.youtube.com/embed?listType=search&list=OUTRO+TEMA"}}
             ],
             "questao_enem": {{
                 "enunciado": "...",

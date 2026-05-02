@@ -10,6 +10,7 @@ class Flashcard(Base):
     id = Column(Integer, primary_key=True)
     pergunta = Column(Text, nullable=False)
     resposta = Column(Text, nullable=False)
+    video_url = Column(String(500), nullable=True)
     
     # Campos para o Algoritmo SRS (vamos usar depois)
     intervalo = Column(Integer, default=0) # Dias

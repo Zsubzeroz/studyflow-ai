@@ -71,7 +71,8 @@ async def upload_pdf(file: UploadFile = File(...), db: Session = Depends(get_db)
             for card in study_data.get('flashcards', []):
                 novo_flashcard = Flashcard(
                     pergunta=card['pergunta'],
-                    resposta=card['resposta']
+                    resposta=card['resposta'],
+                    video_url=card.get('video_url')
                 )
                 db.add(novo_flashcard)
                 
