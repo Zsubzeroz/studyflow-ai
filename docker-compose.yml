@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app  # Sincroniza o código local com o container (bom para dev)
+      - studyflow_db:/app/data # Onde o banco de dados vai morar com segurança
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  studyflow_db:
