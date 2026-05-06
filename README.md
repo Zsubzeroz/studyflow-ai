@@ -2,6 +2,8 @@
 
 O **StudyFlow AI** é uma plataforma inteligente de aprendizado que transforma documentos e materiais de estudo (como PDFs) em flashcards e questões automaticamente utilizando Inteligência Artificial. Ele não é apenas um gerador de conteúdo, mas sim um sistema completo de retenção de conhecimento baseado em repetição espaçada.
 
+---
+
 ## Visual do Projeto 📸
 
 ### Dashboard (Light & Dark Mode)
@@ -23,52 +25,88 @@ O **StudyFlow AI** é uma plataforma inteligente de aprendizado que transforma d
   <img src="docs/screenshots/simulado_2.png" width="45%" />
 </div>
 
+---
+
 ## Tecnologias Utilizadas 🚀
 
 ### Backend & Inteligência Artificial
-- **Python** e **FastAPI**: Framework web moderno, de alta performance e com documentação automática.
-- **SQLAlchemy**: ORM utilizado para persistência de dados em banco SQLite.
-- **Google Gemini API**: Motor de inteligência artificial para extração e processamento lógico dos conteúdos.
-- **Docker**: Containerização completa da infraestrutura.
+- **Python 3.12+**: Linguagem base pela sua robustez em IA e processamento de dados.
+- **FastAPI**: Framework web moderno e de alta performance, utilizando tipagem estática e assincronismo.
+- **SQLAlchemy**: ORM para abstração da camada de banco de dados (SQLite para dev, PostgreSQL pronto para prod).
+- **Google Gemini API (2.0 Flash)**: Engine de IA de última geração para processamento de linguagem natural e extração semântica.
+- **Poetry**: Gestão de dependências moderna e determinística.
 
 ### Frontend
-- **React.js (Vite)**: Construção da Single Page Application (SPA).
-- **Tailwind CSS**: Estilização padronizada, moderna e suporte ao Dark Mode.
-- **Framer Motion**: Biblioteca de física e animações utilizada para os efeitos 3D de repetição espaçada.
-## Arquitetura 🏗️
-O projeto foi desenvolvido seguindo os princípios da **Clean Architecture**, o que garante a manutenibilidade, testabilidade e escalabilidade:
-- **Decoupling (Desacoplamento)**: Separação clara entre a lógica de extração de texto, inteligência artificial e rotas da API, com camadas definidas (`models/`, `services/`, `schemas/`, `utils/`).
-- **Scalability (Escalabilidade)**: Utilização do SQLAlchemy, permitindo trocar o banco de dados atual (SQLite) por um SGBD robusto como PostgreSQL facilmente, à medida que a base de usuários crescer.
-- `main_api.py`: Ponto de entrada web (Application Programming Interface).
+- **React.js + Vite**: SPA rápida com hot-reload e build otimizado.
+- **Tailwind CSS**: Design system utilitário para interfaces responsivas e suporte nativo a Dark Mode.
+- **Framer Motion**: Orquestração de animações complexas para a experiência de Spaced Repetition (SRS).
 
-## Diferenciais de Engenharia 🌟
-- **Algoritmo SM-2 (Spaced Repetition System)**: O coração do modo de estudos. O app calcula o momento ideal para o usuário revisar um flashcard com base no seu nível de dificuldade no momento da resposta, maximizando a retenção na memória e poupando tempo de estudo diário.
-- **Data Integrity (Integridade de Dados)**: Implementação de validação de tipos rigorosa com **Pydantic** e o uso forçado de Response MIME Types (`application/json`) na comunicação com a API do Gemini. Isso garante que o banco de dados nunca receba dados corrompidos ou mal formatados.
+---
+
+## Arquitetura & Engenharia 🏗️
+
+O projeto foi construído seguindo princípios de **Clean Architecture** e **SOLID**, garantindo que o software seja fácil de manter e escalar.
+
+### Diagrama de Fluxo (Data Flow)
+```mermaid
+graph TD
+    A[Upload PDF] --> B[PDF Processor - PyMuPDF]
+    B --> C[AI Service - Gemini 2.0]
+    C --> D[JSON Parser & Validator - Pydantic]
+    D --> E[Database - SQLAlchemy]
+    E --> F[SRS Service - Algoritmo SM-2]
+    F --> G[Frontend - React UI]
+```
+
+### Diferenciais de Engenharia
+- **Algoritmo SM-2 (SRS)**: Implementação do algoritmo de repetição espaçada de SuperMemo-2. O sistema calcula o `intervalo`, `fator-e` e `revisão` de cada card baseado no feedback do usuário, otimizando a curva de esquecimento.
+- **Data Integrity**: Uso rigoroso de modelos **Pydantic** para garantir que a saída da IA (que é não-determinística por natureza) seja validada e tipada antes de atingir o banco de dados.
+- **Decoupling**: A lógica de negócio (Services) está isolada das rotas da API e da infraestrutura (Database/PDF), facilitando testes unitários e troca de provedores de IA.
+
+---
+
+## Segurança & Boas Práticas 🔒
+
+- **Gestão de Segredos**: O projeto utiliza variáveis de ambiente via `.env`. Nunca commitamos chaves de API. Veja o arquivo `.env.example` para referência.
+- **Proteção de Dados**: Validação de arquivos no upload para prevenir injeções e processamento de PDFs maliciosos.
+- **CORS**: Configurado para permitir apenas origens autorizadas em ambiente de produção.
+
+---
 
 ## Como Rodar o Projeto ⚙️
 
-### Backend (Docker - Recomendado)
-1. Clone o repositório e crie o arquivo `.env` na raiz contendo sua chave:
-   ```env
-   GOOGLE_API_KEY=sua_chave_aqui
-   ```
-2. Suba o container da API usando o Docker Compose:
-   ```bash
-   docker-compose up --build
-   ```
-3. A API e o Swagger UI estarão rodando em `http://localhost:8000`.
+### 1. Requisitos Próximos
+- Docker & Docker Compose **OU** Python 3.12+ e Node.js 18+.
+- Uma `GOOGLE_API_KEY` válida (obtenha em [AI Studio](https://aistudio.google.com/)).
 
-### Frontend (React)
-1. Em outro terminal, acesse a pasta da interface:
-   ```bash
-   cd studyflow-ui
-   ```
-2. Instale as dependências e inicie o ambiente de desenvolvimento:
-   ```bash
-   npm install
-   npm run dev
-   ```
-3. Acesse a aplicação completa no seu navegador: 👉 [http://localhost:5173](http://localhost:5173)
+### 2. Configuração do Ambiente
+Clone o repositório e configure seu arquivo `.env`:
+```bash
+cp .env.example .env
+# Edite o .env com sua chave do Google Gemini
+```
+
+### 3. Rodando com Docker (Recomendado)
+```bash
+docker-compose up --build
+```
+A API estará disponível em `http://localhost:8000` e o frontend em `http://localhost:5173`.
+
+### 4. Rodando Localmente (Desenvolvimento)
+
+**Backend:**
+```bash
+# Usando Poetry
+poetry install
+poetry run uvicorn main_api:app --reload
+```
+
+**Frontend:**
+```bash
+cd studyflow-ui
+npm install
+npm run dev
+```
 
 ---
 
