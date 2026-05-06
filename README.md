@@ -2,6 +2,27 @@
 
 O **StudyFlow AI** é uma plataforma inteligente de aprendizado que transforma documentos e materiais de estudo (como PDFs) em flashcards e questões automaticamente utilizando Inteligência Artificial. Ele não é apenas um gerador de conteúdo, mas sim um sistema completo de retenção de conhecimento baseado em repetição espaçada.
 
+## Visual do Projeto 📸
+
+### Dashboard (Light & Dark Mode)
+<div align="center">
+  <img src="docs/screenshots/dashboard_light.png" width="45%" />
+  <img src="docs/screenshots/dashboard_dark.png" width="45%" />
+</div>
+
+### Flashcards e Estudo
+<div align="center">
+  <img src="docs/screenshots/flashcard_light.png" width="45%" />
+  <img src="docs/screenshots/flashcard_dark.png" width="45%" />
+  <img src="docs/screenshots/flashcard_answer.png" width="90%" />
+</div>
+
+### Simulados ENEM
+<div align="center">
+  <img src="docs/screenshots/simulado_1.png" width="45%" />
+  <img src="docs/screenshots/simulado_2.png" width="45%" />
+</div>
+
 ## Tecnologias Utilizadas 🚀
 
 ### Backend & Inteligência Artificial
@@ -48,3 +69,13 @@ O projeto foi desenvolvido seguindo os princípios da **Clean Architecture**, o 
    npm run dev
    ```
 3. Acesse a aplicação completa no seu navegador: 👉 [http://localhost:5173](http://localhost:5173)
+
+---
+
+## Licença 📄
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+Desenvolvido com 💜 para facilitar o seu aprendizado. 
+[GitHub Repository](https://github.com/Zsubzeroz/studyflow-ai)
