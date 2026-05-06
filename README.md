@@ -29,7 +29,7 @@ O projeto foi desenvolvido seguindo os princípios da **Clean Architecture**, o 
 ### Backend (Docker - Recomendado)
 1. Clone o repositório e crie o arquivo `.env` na raiz contendo sua chave:
    ```env
-   GEMINI_API_KEY=sua_chave_aqui
+   GOOGLE_API_KEY=sua_chave_aqui
    ```
 2. Suba o container da API usando o Docker Compose:
    ```bash
