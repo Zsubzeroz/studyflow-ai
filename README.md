@@ -77,5 +77,5 @@ O projeto foi desenvolvido seguindo os princípios da **Clean Architecture**, o 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ---
-Desenvolvido com 💜 para facilitar o seu aprendizado. 
+Desenvolvido com 💜 por **Luan Estifer Rodrigues Pereira (Zsubzeroz)**. 
 [GitHub Repository](https://github.com/Zsubzeroz/studyflow-ai)
