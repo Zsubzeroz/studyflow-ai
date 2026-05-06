@@ -8,7 +8,7 @@ load_dotenv()
 class AIService:
     def __init__(self):
         self.client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
-        self.model_name = "gemini-1.5-flash"
+        self.model_name = "gemini-flash-latest"
 
     def generate_study_material(self, text_content: str):
         
@@ -18,8 +18,8 @@ class AIService:
 
         {{
             "flashcards": [
-                {{"pergunta": "...", "resposta": "...", "video_url": "https://www.youtube.com/embed?listType=search&list=TEMA+AQUI+RESUMO"}},
-                {{"pergunta": "...", "resposta": "...", "video_url": "https://www.youtube.com/embed?listType=search&list=OUTRO+TEMA"}}
+                {{"pergunta": "...", "resposta": "...", "video_url": "https://www.youtube.com/embed?listType=search&list=RESUMO+AULA+SOBRE+TEMA"}},
+                {{"pergunta": "...", "resposta": "...", "video_url": "https://www.youtube.com/embed?listType=search&list=DICA+RAPIDA+TEMA"}}
             ],
             "questao_enem": {{
                 "enunciado": "...",

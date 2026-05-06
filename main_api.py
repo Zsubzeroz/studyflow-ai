@@ -65,7 +65,14 @@ async def upload_pdf(file: UploadFile = File(...), db: Session = Depends(get_db)
             
         import json
         try:
-            study_data = json.loads(raw_response)
+            # Limpar a resposta caso a IA retorne Markdown
+            clean_response = raw_response.strip()
+            if clean_response.startswith("```json"):
+                clean_response = clean_response[7:]
+            if clean_response.endswith("```"):
+                clean_response = clean_response[:-3]
+            
+            study_data = json.loads(clean_response.strip())
             
             # Salvar Flashcards
             for card in study_data.get('flashcards', []):
